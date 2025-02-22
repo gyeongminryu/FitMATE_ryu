@@ -15,7 +15,7 @@
 			<a href="crew_search">크루 검색</a>
 		</li>
 		<li>
-			<a href="mycrew">내 크루</a>
+			<a href="mycrew ">내 크루</a>
 		</li>
 		<li>
 			<a href="member_message.go">메시지</a>
