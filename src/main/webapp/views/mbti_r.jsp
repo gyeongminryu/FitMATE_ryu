@@ -18,7 +18,6 @@
         }
         .Question_page {
             margin-left: 226px;
-            margin-top: 103px;
             width: 500px;
             height: 510px;
         }
@@ -188,8 +187,11 @@
         console.log('value:{}',value);
 
 
+
+
         var keys = Object.keys(max);
         console.log('keys:'+keys);
+
         for (var k of keys){
             console.log('key:{}',k);
             console.log('value:{}',max[k]);

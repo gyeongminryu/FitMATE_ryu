@@ -143,6 +143,7 @@
 				<%--<div class="next" onclick="load_nextPage(currentQuestionIdx)">다음 질문 →</div>--%>
 
 				<form action="mbti_r.go" method="get" type = hidden>
+
 					<input type = "button" class="next" value="다음 질문 →" onclick="load_nextPage(currentQuestionIdx)">
 				</form>
 
@@ -286,17 +287,10 @@
 
 
 
-	//총 합산 점수 구할 변수 만들기
-	// let scores = {
-	// 	"잔근육매니아" : 0,
-	// 	"유산소매니아" : 0,
-	// 	"건강추종자" : 0,
-	// 	"자기개발자" : 0,
-	// 	"시간부족형" : 0
-	// }
+
 
 	let scores = {}; //여기는 let scores = new scores();
-	function create_Totalscore(){ //이것도 처음할 때만 하도록...
+	function create_Totalscore(){ //처음에만 진행
 			$.ajax({
 				type: 'GET',
 				url: 'create_Totalscore.ajax',
@@ -405,7 +399,7 @@
 
 		// =======================================
 		//저장하는 방법...
-		//1. 직접 데이터 형태를 만들기 (노가다..노가다...)
+		//1. 직접 데이터 형태를 만들기
 		//2. selectedScore에 넣어주기....
 		// =======================================
 
@@ -435,7 +429,7 @@
 
 			console.log('type_score : ',typescores);
 
-			//문자열로 저장해서 문제 생김 -> 객체로 저장하기... (★해결...이따구로 코드 짜지 않기...)
+			//문자열로 저장해서 문제 생김 -> 객체로 저장하기...
 			// console.log('saveScore에서 TypeScore 분리한 값:',TypeScore);
 			// console.log('"Type' + a + '":' + TypeScore.mbtir_name +','+'"score'  + a + '": "' + TypeScore.mbtiscr_scr + '"');
 			// b+= '"Type' + a + '":' + TypeScore.mbtir_name +','+'"score'  + a + '": "' + TypeScore.mbtiscr_scr + '"';
@@ -495,6 +489,7 @@
 			}
 		}
 	}
+
 
 	//다음 버튼 클릭하기 ===============================================
 	//다음 버튼 클릭하면 현재 idx 값 전달 -> idx보다 큰 idx 값들 찾고 limit 1 걸기
