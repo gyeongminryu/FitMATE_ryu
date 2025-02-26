@@ -18,7 +18,7 @@
 			<a href="mycrew">내 크루</a>
 		</li>
 		<li>
-			<a href="member_message.go">메시지</a>
+			<p onclick="chat_modal_open()">메시지</p>
 		</li>
 		<li>
 			<a href="member_profile.go">마이 페이지</a>
@@ -30,6 +30,7 @@
 	</ul>
 </div>
 <script src="resources/js/member_leftnav.js"></script>
+<script src="resources/js/chat_modal.js"></script>
 <script>
 	window.onload = function (){
 		//setInterval로 알림이 있는 지 function 실행

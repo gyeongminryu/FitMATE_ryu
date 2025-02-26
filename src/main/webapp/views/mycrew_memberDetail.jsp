@@ -193,7 +193,7 @@
         </div>
 
         <!-- 메시지 발송 버튼 -->
-        <button onclick="findMessageGroup('${profile.user_id}')" class="mainbtn full sendMessageBtn">메시지 보내기</button>
+        <button onclick="find_chat_group('${profile.user_id}')" class="mainbtn full sendMessageBtn">메시지 보내기</button>
         <script>
             var loginId = '${sessionScope.loginId}';
             var receiver = '${profile.user_id}';

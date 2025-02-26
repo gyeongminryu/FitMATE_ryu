@@ -18,7 +18,7 @@
 			<a href="mycrew">내 크루</a>
 		</li>
 		<li class="active">
-			<a href="member_message.go">메시지</a>
+			<p onclick="chat_modal_open()">메시지</p>
 		</li>
 		<li>
 			<a href="member_profile.go">마이 페이지</a>
@@ -29,6 +29,7 @@
 		</li>
 	</ul>
 </div>
+<script src="resources/js/chat_modal.js"></script>
 <script src="resources/js/member_leftnav.js"></script>
 
 <script>
@@ -46,7 +47,7 @@
 			data :{},
 			dataType : 'JSON',
 			success : function (data){
-				if(data.exists == 'exist'){
+				if(data.exists === 'exist'){
 					var notify = document.querySelector('.leftnav .hide');
 					notify.classList.remove('hide');
 				}

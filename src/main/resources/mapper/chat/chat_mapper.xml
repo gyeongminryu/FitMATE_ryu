@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+        >
+<mapper namespace="com.fitmate.chat.dao.ChatDAO">
+    <select id="get_chat_group_member" resultType="Map">
+        SELECT
+            mgm.msg_group_idx AS chat_group_idx,
+            ml.msg_group_cate AS chat_cate,
+            msg_group_member_id AS chat_name,
+            m.content AS last_chat,
+            DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i')AS last_chat_time,
+            NULL AS crew_idx
+        FROM
+            msg_grp_member mgm
+                JOIN
+            message m ON mgm.msg_group_idx = m.group_idx
+                JOIN
+            message_list ml ON ml.msg_group_idx = mgm.msg_group_idx
+        WHERE
+            mgm.msg_group_idx IN (SELECT msg_group_idx FROM msg_grp_member WHERE msg_group_member_id = #{member_id})
+          AND msg_group_member_id != #{member_id}
+        ORDER BY
+            m.sendtime DESC
+            LIMIT 1
+    </select>
+
+    <select id="get_chat_group_crew" resultType="Map">
+        select mgc.msg_group_idx as chat_group_idx, msg_crew_idx as crew_idx, ml.msg_group_cate as chat_cate,c.name as chat_name, m.content as last_chat, DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i:%s') as last_chat_time from msg_grp_crew mgc
+             join message_list ml on ml.msg_group_idx = mgc.msg_group_idx
+             join crew_member cm on cm.crew_idx = mgc.msg_crew_idx
+             join crew c on c.crew_idx = cm.crew_idx
+             join message m on m.group_idx = ml.msg_group_idx
+        where cm.member_id = #{member_id} and cm.leave_date is null
+        order by m.sendtime desc limit 1
+    </select>
+
+    <select id="find_chat_group">
+        select COUNT(*) from msg_grp_member
+              where msg_group_idx = (select msg_group_idx from msg_grp_member where msg_group_member_id = #{member1}) and msg_group_member_id = #{member2}
+    </select>
+
+
+    <select id="get_chat_group_idx">
+        select msg_group_idx from msg_grp_member
+        where msg_group_idx = (select msg_group_idx from msg_grp_member where msg_group_member_id = #{member1}) and msg_group_member_id = #{member2}
+    </select>
+    
+    <insert id="create_chat_group"
+            useGeneratedKeys = "true"
+            keyColumn="msg_group_idx"
+            keyProperty="msg_group_idx"
+            parameterType="com.fitmate.chat.dto.ChatDTO">
+
+        INSERT INTO message_list (msg_group_cate)
+            VALUES (#{msg_group_cate})
+    </insert>
+
+    <insert id="insert_chat_grp_member">
+        INSERT INTO msg_grp_member (msg_group_idx,msg_group_member_id)
+        VALUES (#{msg_grp_idx},#{member})
+    </insert>
+
+    <insert id="insert_chat_grp_crew">
+        INSERT INTO msg_grp_crew (msg_group_idx,msg_crew_idx)
+        VALUES (#{chat_grp_idx},#{crew_idx})
+    </insert>
+
+    <insert id="insert_chat_msg">
+        INSERT INTO message(sender_id,content,group_idx)
+        VALUES(#{sender_id}, #{content},#{group_idx})
+    </insert>
+
+    <select id="get_my_nick_name" resultType="String">
+        SELECT nick from member where user_id = #{login_id}
+    </select>
+
+
+    <!-- 닉네임 + 보낸 내용 + 보낸 시간 -->
+    <select id="get_chat_list">
+        select mb.nick, m.content, DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i:%s') as sendtime, m.group_idx
+        from message m
+                 join member mb on mb.user_id = m.sender_id
+        where m.group_idx = #{chat_group_idx}
+        union all
+        select m.sender_id as nick, m.content, DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i:%s') as sendtime, m.group_idx
+        from message m
+        where m.sender_id = 'system' and m.group_idx = #{chat_group_idx}
+        order by sendtime asc;
+
+    </select>
+
+    <select id="get_chat_group_cate" resultType="String">
+        select msg_group_cate from message_list where msg_group_idx = #{chat_group_idx};
+    </select>
+
+    <select id="get_chat_participants_member" resultType="String">
+        select nick from member where user_id in (select msg_group_member_id from msg_grp_member mgm where msg_group_idx =#{chat_group_idx});
+    </select>
+
+    <select id="get_chat_participants_crew" resultType="String">
+        select nick from member where user_id in (select crew_id from crew c2 where crew_idx = (select msg_crew_idx from msg_grp_crew mgc where msg_group_idx = #{chat_group_idx}));
+    </select>
+
+    <insert id="insert_chat">
+        INSERT INTO message (sender_id,content,sendtime,group_idx)
+        VALUES (#{login_id},#{chat_msg},#{date},#{grp_idx})
+    </insert>
+
+</mapper>

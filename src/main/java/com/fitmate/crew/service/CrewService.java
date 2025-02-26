@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.fitmate.chat.dao.ChatDAO;
+import com.fitmate.chat.dto.ChatDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ public class CrewService {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired CrewDAO crew_dao;
+	@Autowired ChatDAO chat_dao;
 	
 	
 	
@@ -44,7 +47,9 @@ public int crew_create(String crew_id, String name, int regions_idx, String cont
 		CrewDTO crew_dto = new CrewDTO();
 		CrewIdxDTO crewidx_dto = new CrewIdxDTO();
 		CrewMemberDTO crewmember_dto = new CrewMemberDTO();
-		
+		ChatDTO chat_dto = new ChatDTO();
+
+
 		crew_dto.setCrew_id(crew_id);
 		crew_dto.setName(name);
 		crew_dto.setRegions_idx(regions_idx);
@@ -65,7 +70,19 @@ public int crew_create(String crew_id, String name, int regions_idx, String cont
 			//	suc = crew_idx;
 				crew_dao.crew_leaderjoin(crewmember_dto);
 			};
-			
+
+			chat_dto.setMsg_group_cate("crew");
+
+			//크루 채팅방 생성
+
+			chat_dao.create_chat_group(chat_dto);
+			int chat_group_idx = chat_dto.getMsg_group_idx();
+
+			chat_dao.insert_chat_grp_crew(chat_group_idx,suc);
+
+			chat_dao.insert_chat_msg("system","크루의 채팅이 시작되었습니다.",chat_group_idx);
+			//그룹 idx
+
 		};
 				
 		// 크루 생성 확인
