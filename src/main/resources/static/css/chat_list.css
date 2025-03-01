@@ -163,8 +163,9 @@ body{
 .chat_time{
     font-size: 10px;
     color: gray;
-    position: relative;
-    right: -140px;
+    width: 240px;
+    position: absolute;
+    right: 0px;
 }
 
 .chat_system_alert{

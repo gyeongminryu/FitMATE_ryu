@@ -85,8 +85,10 @@
         <div class="chat_msg_other">${chat_item.content}</div>
 
         <c:set var="chat_date" value="${fn:substringBefore(chat_item.sendtime, ' ')}"></c:set>
+        <c:set var="chat_time" value="${fn:substringAfter(chat_item.sendtime, ' ')}"></c:set>
+
         <c:if test="${today != chat_date}">
-        <div class="chat_time">${chat_item.sendtime}</div>
+        <div class="chat_time"> ${chat_date} ${fn:substring(chat_time,0,5)}</div>
         </c:if>
 
         <c:if test="${today == chat_date}">

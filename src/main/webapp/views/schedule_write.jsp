@@ -285,6 +285,9 @@
       height: 100px;
     }
 
+    .essential{
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -297,25 +300,28 @@
       <div class="list">
         <h3 class="capt">
           <div id = "category">
+
             <select name="cate" id ="cate" onchange = "onOptionChange(event)">
-              <option value="default">크루/개인</option>
+              <option value="default"><div class="essential">*</div>크루/개인</option>
               <option value="1">개인</option>
               <option value="2">크루</option>
             </select>
           </div>
 
           <div id = "total_date">
-            <div class="date_title">날짜</div>
+            <div class="date_title"><div class="essential">*</div>날짜</div>
             <p><input type="date" name="date" id = "date" value = ""/></p>
+
             <div class="time_box">
-              <div class="starttime_title">운동 시작 시간</div><div class="endtime_title">운동 종료 시간</div>
+
+              <div class="starttime_title"><div class="essential">*</div>운동 시작 시간</div><div class="endtime_title"><div class="essential">*</div>운동 종료 시간</div>
               <div class="times"><input type = "time" name="start_time" id ="start_time" value=""/><input type = "time" name="end_time"  id ="end_time" value=""/></div>
             </div>
           </div>
 
 
           <div class="journal">
-            <div class="journal_name">일지</div>
+            <div class="journal_name"><div class="essential">*</div>일지</div>
             <textarea name="textarea" id = "textarea" placeholder="최대 1000자까지 입력할 수 있습니다." onkeyup="word_count()"></textarea>
             <div id="word_alert">1,000자를 초과하여 작성할 수 없습니다.</div>
             <div id = "words"><div class="count_words">0</div><div class="total_words">/1,000</div></div>

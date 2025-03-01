@@ -52,13 +52,31 @@
 		}
 
 		#schedule {
-			width: 475px;
+			width: 481px;
 			height: 680px;
 			overflow-y: scroll;
 			overflow-x: hidden;
 			margin: -823px -414px 9px 0px;
-			float : right;
+			float: right;
 		}
+
+		/* 페이지 전체의 스크롤바 스타일 */
+		::-webkit-scrollbar {
+			width: 12px;
+			height: 12px;
+		}
+
+		::-webkit-scrollbar-track {
+			background-color:rgba(40, 43, 52, 1);
+
+		}
+
+		::-webkit-scrollbar-thumb {
+			background-color: rgba(4, 129, 135, 1);
+
+			border-radius: 10px;
+		}
+
 
 
 		.crew_schedule_title { /*만약 크루 일정 없으면 display = none*/
@@ -156,19 +174,19 @@
 			word-wrap: break-word;
 		}
 
-	/*	.prev_icon{
-			margin: 0px -47px 25px 15px;
-			font-size: 32px;
-		}
-		.next_icon{
-			margin: -242px -23px -16px 398px;
-			font-size: 32px;
-		}
-		.journal_image {
-			display: flex;
-			max-width: 500px;
-			margin-right: 14px;
-		}*/
+		/*	.prev_icon{
+                margin: 0px -47px 25px 15px;
+                font-size: 32px;
+            }
+            .next_icon{
+                margin: -242px -23px -16px 398px;
+                font-size: 32px;
+            }
+            .journal_image {
+                display: flex;
+                max-width: 500px;
+                margin-right: 14px;
+            }*/
 
 		.crew_schedule_content {
 			padding: 10px;
@@ -243,9 +261,8 @@
 		}
 
 		.journal_image_list{
-			width: 1000px;
 			display: flex;
-			overflow: hidden;
+			overflow-y: auto;
 			position: relative;
 			margin-left: 0px;
 		}
@@ -332,54 +349,54 @@
 <div class="container">
 	<c:import url="layout/leftnav_1.jsp"></c:import>
 	<!-- 운동일지는 nav1로, mbti만 nav5로 -->
-		<div class="contents">
-			<p>Hello, FitMATE!</p>
-			<div id="calendar_related">
+	<div class="contents">
+		<p>Hello, FitMATE!</p>
+		<div id="calendar_related">
 
 
-				<div class="contents">
-					<!-- 달력 -->
-					<div class="calendar">
-						<div class="title_calendar">
-							<p>일정 보기</p>
-							<div id="date"></div>
-							<button class="writebtn mainbtn minbtn">일정 작성</button>
-						</div>
-						<div id="calendar"></div>
+			<div class="contents">
+				<!-- 달력 -->
+				<div class="calendar">
+					<div class="title_calendar">
+						<p>일정 보기</p>
+						<div id="date"></div>
+						<button class="writebtn mainbtn minbtn">일정 작성</button>
 					</div>
-					<div class="journal_write_button" onclick="write_go()">일지 작성하기</div>
+					<div id="calendar"></div>
+				</div>
+				<div class="journal_write_button" onclick="write_go()">일지 작성하기</div>
+			</div>
+
+
+
+			<div id="schedule">
+				<div class="crew_schedule_title">크루 일정</div>
+				<div class="crew_schedule">
+
+				</div>
+				<hr/>
+				<div id = "journal_total">
+
+
 				</div>
 
-
-
-				<div id="schedule">
-					<div class="crew_schedule_title">크루 일정</div>
-					<div class="crew_schedule">
-
-					</div>
-					<hr/>
-					<div id = "journal_total">
-
-
-					</div>
-
+			</div>
+		</div>
+	</div>
+	<!-- 모달창 -->
+	<div class="modal" id="scheduleModal">
+		<div class="custom_modal_background">
+			<div class="modal_container custom_modal_container">
+				<div class="modal_header">
+					<h3 class="title">일정 상세 보기</h3>
+					<button class="btn_close" onclick="closeModal()">닫기</button>
+				</div>
+				<div class="modal_body0" id="modalBody">
+					<!-- 선택한 날짜를 기준으로 크루 플랜 값 가져오기 제목,시간,장소,내용,참가인원 -->
 				</div>
 			</div>
 		</div>
-		<!-- 모달창 -->
-		<div class="modal" id="scheduleModal">
-			<div class="custom_modal_background">
-				<div class="modal_container custom_modal_container">
-					<div class="modal_header">
-						<h3 class="title">일정 상세 보기</h3>
-						<button class="btn_close" onclick="closeModal()">닫기</button>
-					</div>
-					<div class="modal_body0" id="modalBody">
-						<!-- 선택한 날짜를 기준으로 크루 플랜 값 가져오기 제목,시간,장소,내용,참가인원 -->
-					</div>
-				</div>
-			</div>
-		</div>
+	</div>
 
 	<c:import url="layout/modal.jsp"></c:import>
 </body>
@@ -486,7 +503,7 @@
 			success : function(journal){
 				console.log('journal 가져오기 성공:',journal);
 
-					draw_journal(journal);
+				draw_journal(journal);
 
 			},
 			error : function(e){
@@ -546,36 +563,17 @@
 	var date;
 
 	$('#calendar').on('click','td[aria-labelledby]',function(evt){
-			date = $(this).attr('data-date');
-			console.log('캘린더로부터 뽑아온 date : {}' + date);
-			$('#date').html(date);
+		date = $(this).attr('data-date');
+		console.log('캘린더로부터 뽑아온 date : {}' + date);
+		$('#date').html(date);
 
-			//뽑은 날짜 기반으로 개인 일정 가져오기
-			get_journal(date);
+		//뽑은 날짜 기반으로 개인 일정 가져오기
+		get_journal(date);
 
-			//뽑은 날짜 기반으로 크루 일정 가져오기
-			get_crewdate(date);
+		//뽑은 날짜 기반으로 크루 일정 가져오기
+		get_crewdate(date);
 	});
 
-
-
-	//날짜 뽑아오기 수정하기 전
-	/*$('td[aria-labelledby]').each(function(event){
-
-		this.addEventListener('click',function(evt){
-
-			date = $(this).attr('data-date');
-
-			console.log('캘린더로부터 뽑아온 date : {}' + date);
-
-			$('#date').html(date);
-
-			//get_crewdate(date);
-
-			get_journal(date);
-
-		});
-	});*/
 
 	function get_crewdate(date){
 		//date 매개변수로 전달해서 내용 가져오기
@@ -597,10 +595,6 @@
 		var keySet = Object.keys(crew.content);
 		console.log('keySet:' + keySet);
 
-		/*console.log('crew', crew);
-		console.log('keySet', keySet);
-		console.log('키의 길이 : {}', keySet.length);
-		console.log('crew', crew.content);*/
 		//crew.content
 		//만약 key의 길이가 있으면 보여주고
 		console.log('keySet.length:',keySet.length);
@@ -647,7 +641,7 @@
 			var content = '<div class = "crew_schedule_content_none">스케줄 없음</div>';
 			$('.crew_schedule').html(content);
 			$('.crew_schedule').css({'display' : 'hidden'});
-		console.log('값 있음');
+			console.log('값 있음');
 		}
 
 
@@ -671,6 +665,7 @@
 
 	let initialize = 0;
 	let file_object = [];
+	let exact_files=[];
 	function draw_journal(journal){
 
 		var keySet = Object.keys(journal.content);
@@ -729,37 +724,26 @@
 
 				if(files.length > 0){
 
-				//files.length;에 따라 .journal_image_list의 길이 동적으로 조정해주기
-					//이미지의 min-width가져와서 * 개수한 것을 .journal_image_list의 길이로 넣어주기
-					/*var min_width = $('.real_image').css('min-width');
-					console.log('min_width',min_width);*/
-						content += '<div class = "journal_image_list">';
+					content += '<div class = "journal_image_list" index="' + j_data['journal_idx'] + '">';
 
-					let exact_file = files.filter(file => file.board_idx === j_data['journal_idx']);
-					console.log('exact_file :',exact_file);
 
-					if (j_data['journal_idx'] == exact_file[0].board_idx) {
-						if (exact_file.length == 1) {
-							console.log("첫번째 file 찾기", exact_file[0]);
-							//첫번째 index로 무조건 넣기?
-							console.log('JSON.stringify(exact_file):',JSON.stringify(exact_file));
-							for (var exact of exact_file){
-								file_object.push(exact);
-							}
-							console.log('file_object:',file_object);
-							content += '<div class="img" index="' + j_data['journal_idx'] + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: hidden" onclick="prev_img(0, \'' + j_data['journal_idx'] + '\', \'' + encodeURIComponent(JSON.stringify(exact_file)) + '\')"></i><img width="460px" class="real_img" alt="' + exact_file[0].ori_filename + '" src="/photo/' + exact_file[0].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img(0, \'' + j_data['journal_idx'] + '\', \'' + encodeURIComponent(JSON.stringify(exact_file)) + '\')"></i></div>';
+					for(var a = 0; a<files.length;a++){
+						console.log('files[a]',files[a]);
 
-						} else if (exact_file.length > 1) {
-							console.log('file_object:',file_object);
-							content += '<div class="img" index="' + j_data['journal_idx'] + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: hidden" onclick="prev_img(0, \'' + j_data['journal_idx'] + '\', \'' + encodeURIComponent(JSON.stringify(exact_file)) + '\')"></i><img width="460px" class="real_img" alt="' + exact_file[0].ori_filename + '" src="/photo/' + exact_file[0].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img(0, \'' + j_data['journal_idx'] + '\', \'' + encodeURIComponent(JSON.stringify(exact_file)) + '\')"></i></div>';
+						if (j_data['journal_idx'] === files[a].board_idx) {
+								content += '<div class="img" index="' + j_data['journal_idx'] + '"><img width="460px" class="real_img" alt="' + files[a].ori_filename + '" src="/photo/' + files[a].new_filename + '"/></div>';
 						}
 					}
 				}
 				content +=	'</div></div></div></div>';
 
 				$('.journal').css({'margin':'18px 2px 530px 0px'});
+				$('#journal_total').html(content);
+			}else{
+				$('#journal_total').html('');
 			}
-			$('#journal_total').html(content);
+
+
 		}
 		console.log('content: ', content);
 	}
@@ -816,66 +800,81 @@
 
 	});*/
 
-	function prev_img(i,index,file){
-		//현재의 index를 가져옴
-		console.log('받아온 index 값 :', index);
-
-		//현재의 index를 가져옴
-		console.log('받아온 i 값 :', i);
-		console.log('받아온 index 값 :', index);
-		const decodedArray = JSON.parse(decodeURIComponent(file));
-		console.log("전달 받은 file 디코딩 + parse 완료:",decodedArray);
-		if(i < decodedArray.length){
-			console.log('file 개수:',decodedArray.length);
-
-
-			console.log('i:',i);
-			i++;
-			console.log('현재 파일의 다음 파일 값 :',decodedArray[i]);
-
-
-			//index 값을 가진 이미지 없애기
-			var present_img = document.querySelector('.img[index ="'+index+'"]');
-			console.log('현재 이미지:',present_img);
-
-			img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
-
-			present_img.innerHTML = img_content;
-
-		}else if(i == 1){
-			img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: hidden" onclick="prev_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
-		}
-
-	}
-
-
-	function next_img(i,index,file){
-		//현재의 index를 가져옴
-		console.log('받아온 i 값 :', i);
-		console.log('받아온 index 값 :', index);
-		const decodedArray = JSON.parse(decodeURIComponent(file));
-		console.log("전달 받은 file 디코딩 + parse 완료:",decodedArray);
-		if(i < decodedArray.length){
-			console.log('file 개수:',decodedArray.length);
-
-
-			console.log('i:',i);
-			i++;
-			console.log('현재 파일의 다음 파일 값 :',decodedArray[i]);
-
-
-			//index 값을 가진 이미지 없애기
-			var present_img = document.querySelector('.img[index ="'+index+'"]');
-			console.log('현재 이미지:',present_img);
-
-			img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
-
-			present_img.innerHTML = img_content;
-
-		}else if(i == decodedArray.length){
-			img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: hidden" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
-		}
-	}
+	// function prev_img(i,index,file){
+	//
+	// 	//현재의 index를 가져옴
+	// 	console.log('받아온 index 값 :', index);
+	// 	const present_img = document.querySelector('.journal_image_list[index ="' + index + '"]');
+	//
+	// 	//index 값을 가진 이미지 없애기
+	// 	console.log('현재 이미지:',present_img);
+	//
+	// 	//현재의 index를 가져옴
+	// 	console.log('받아온 i 값 :', i);
+	// 	console.log('받아온 index 값 :', index);
+	// 	const decodedArray = JSON.parse(decodeURIComponent(file));
+	// 	console.log("전달 받은 file 디코딩 + parse 완료:",decodedArray);
+	// 	i--;
+	//
+	// 	var img_content;
+	//
+	// 	if (i < decodedArray.length) {
+	// 		console.log('file 개수:', decodedArray.length);
+	//
+	//
+	// 		console.log('i:', i);
+	// 		console.log('현재 파일의 이전 파일 값 :', decodedArray[i]);
+	//
+	//
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img(' + i + ', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img(' + i + ', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	//
+	// 	} else if (i === 0) {
+	// 		console.log('i:', i);
+	//
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="display: none" onclick="prev_img(' + i + ', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img(' + i + ', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	// 	} else if (i === decodedArray.length - 1) {
+	// 		console.log('i:', i);
+	//
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img(' + i + ', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="display: none" onclick="next_img(' + i + ', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	// 	}
+	// 	present_img.innerHTML = img_content;
+	// }
+	//
+	//
+	// function next_img(i,index,file){
+	// 	var img_content;
+	// 	const present_img = document.querySelector('.journal_image_list[index ="' + index + '"]');
+	// 	//index 값을 가진 이미지 없애기
+	// 	console.log('현재 이미지:',present_img);
+	//
+	// 	//현재의 index를 가져옴
+	// 	console.log('받아온 i 값 :', i);
+	// 	console.log('받아온 index 값 :', index);
+	// 	const decodedArray = JSON.parse(decodeURIComponent(file));
+	// 	console.log("전달 받은 file 디코딩 + parse 완료:",decodedArray);
+	// 	i++;
+	//
+	// 	console.log("decodedArray.length",decodedArray.length);
+	// 	if(i < decodedArray.length-1){
+	// 		console.log('file 개수:',decodedArray.length);
+	//
+	// 		console.log('i:',i);
+	// 		console.log('현재 파일의 다음 파일 값 :',decodedArray[i]);
+	//
+	//
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img('+i+', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	//
+	//
+	// 	}else if(i === 0){
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="display: none" onclick="prev_img('+i+', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="visibility: visible" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	// 	}else if(i===decodedArray.length-1){
+	// 		img_content = '<div class="img" index="' + index + '"><i class="bi bi-arrow-left-circle-fill" style="visibility: visible" onclick="prev_img('+i+', \'' + index + '\', \'' + file + '\')"></i><img width="460px" class="real_img" alt="' + decodedArray[i].ori_filename + '" src="/photo/' + decodedArray[i].new_filename + '"/><i class="bi bi-arrow-right-circle-fill" style="display: none" onclick="next_img('+i+', \'' + index + '\', \'' + encodeURIComponent(decodedArray) + '\')"></i></div>';
+	// 	}
+	//
+	//
+	//
+	// 	present_img.innerHTML = img_content;
+	// }
 
 	function openModal2(journal_idx){
 		console.log("보이는지",initialize);

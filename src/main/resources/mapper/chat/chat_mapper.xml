@@ -26,13 +26,25 @@
     </select>
 
     <select id="get_chat_group_crew" resultType="Map">
-        select mgc.msg_group_idx as chat_group_idx, msg_crew_idx as crew_idx, ml.msg_group_cate as chat_cate,c.name as chat_name, m.content as last_chat, DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i:%s') as last_chat_time from msg_grp_crew mgc
-             join message_list ml on ml.msg_group_idx = mgc.msg_group_idx
-             join crew_member cm on cm.crew_idx = mgc.msg_crew_idx
-             join crew c on c.crew_idx = cm.crew_idx
-             join message m on m.group_idx = ml.msg_group_idx
-        where cm.member_id = #{member_id} and cm.leave_date is null
-        order by m.sendtime desc limit 1
+        SELECT
+            mgc.msg_group_idx AS chat_group_idx,
+            msg_crew_idx AS crew_idx,
+            ml.msg_group_cate AS chat_cate,
+            c.name AS chat_name,
+            m.content AS last_chat,
+            DATE_FORMAT(m.sendtime, '%Y-%m-%d %H:%i') AS last_chat_time
+        FROM msg_grp_crew mgc
+                 JOIN message_list ml ON ml.msg_group_idx = mgc.msg_group_idx
+                 JOIN crew_member cm ON cm.crew_idx = mgc.msg_crew_idx
+                 JOIN crew c ON c.crew_idx = cm.crew_idx
+                 JOIN message m ON m.group_idx = ml.msg_group_idx
+        WHERE cm.member_id = #{member_id} AND cm.leave_date IS NULL
+          AND m.sendtime = (
+            SELECT MAX(m2.sendtime)
+            FROM message m2
+            WHERE m2.group_idx = mgc.msg_group_idx
+        )
+        ORDER BY m.sendtime DESC;
     </select>
 
     <select id="find_chat_group">
