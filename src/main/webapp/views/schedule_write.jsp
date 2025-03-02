@@ -327,7 +327,6 @@
             <div id = "words"><div class="count_words">0</div><div class="total_words">/1,000</div></div>
             <!--파일 버튼 커스텀 하는 법
             label 안에 커스텀 버튼을 넣고, type = file은 display : none-->
-
             <div>
             <div class="filebox">
               <input class="upload-name" value="" placeholder="첨부파일">
